@@ -1,9 +1,0 @@
-let result = "let byeweek = {";
-for (let i of document.getElementsByClassName("player-row")) {
-  result += `${i.children[2].children[0].children[1].innerText.slice(1,-1)}:"[${i.children[3].innerText}]",\n`;
-}
-result += `FA:""}`
-let a = document.createElement('a');
-a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(result));
-a.setAttribute('download', "byeweek.js");
-a.click();

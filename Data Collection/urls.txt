@@ -1,3 +1,0 @@
-rankings: https://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php
-byeweek: https://www.fantasypros.com/nfl/rankings/dst-cheatsheets.php
-depthChart: https://www.fantasypros.com/nfl/depth-charts.php
