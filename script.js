@@ -122,7 +122,8 @@ function hideP(e) {
 }
 
 function clearLocal() {
-  if (prompt("Enter 'WHO DEY' to confirm you want to reset.").toUpperCase() == "WHO DEY") {
+  const response = prompt("Enter 'clear' to confirm you want to reset.");
+  if (response && response.toLowerCase() == "clear") {
     localStorage.checkedList = "[]";
     document.location.reload();
   }
