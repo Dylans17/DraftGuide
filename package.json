@@ -1,0 +1,22 @@
+{
+  "name": "draftguide",
+  "version": "1.0.0",
+  "description": "Use html to display, cross off and search for nfl players in google sheet.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dylans17/DraftGuide.git"
+  },
+  "author": "Dylan Strickley",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dylans17/DraftGuide/issues"
+  },
+  "homepage": "https://github.com/Dylans17/DraftGuide#readme",
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
+}
