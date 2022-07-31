@@ -1,0 +1,8 @@
+let result = "Name,Position,Team,Note\n";
+for (let i of document.getElementsByClassName("player-row")) {
+    result += `${i.children[2].children[0].children[0].innerText},${i.children[3].innerText.match(/[^0-9]*/)[0]},${i.children[2].children[0].children[1].innerText.slice(1,-1)},\n`;
+}
+let a = document.createElement('a');
+a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(result));
+a.setAttribute('download', "rankings.csv");
+a.click();

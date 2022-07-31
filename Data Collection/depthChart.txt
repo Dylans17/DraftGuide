@@ -1,0 +1,13 @@
+let result = "let depths = ["
+for (let i of document.getElementsByClassName("position-list")) {
+  result += "["
+  for (let j of i.children[1].children) {
+    result += `"${j.children[1].innerText}",`
+  }
+  result += "],"
+}
+result += "];"
+let a = document.createElement('a');
+a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(result));
+a.setAttribute('download', "depthChart.js");
+a.click();
