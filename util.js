@@ -18,7 +18,7 @@ async function getSheet(sheetName, key) {
   //tqx += `;sig:${signature}`
   let response = await fetch(`https://docs.google.com/spreadsheets/d/${key}/gviz/tq?tqx=${tqx}&sheet=${sheetName}`);
   let text = await response.text();
-  let innerContent = /^[/O_o*\n]+a\((.*)\);$/.exec(temp3)[1];
+  let innerContent = /^[/O_o*\n]+a\((.*)\);$/.exec(text)[1];
   return JSON.parse(innerContent);
 }
 
@@ -28,7 +28,7 @@ async function getAllData(forceReset) {
 }
 
 async function getByeWeeks(forceReset, key) {
-  
+
 }
 
 async function getDepthCharts(forceReset, key) {
