@@ -29,8 +29,13 @@ export function getGetParameters() {
     return JSON.parse(innerContent);
   }
   
-  export async function getAllData(forceReset:boolean) {
-    const key = getGetParameters().key;
+  export async function getAllData(forceReset:boolean | undefined, key: string | undefined) {
+    if (forceReset === undefined) {
+      forceReset = false;
+    }
+    if (key == undefined) {
+      key = getGetParameters().key;
+    }
     return Promise.all([getByeWeeks(forceReset, key), getDepthCharts(forceReset, key), getRankings(forceReset, key)]);
   }
   
