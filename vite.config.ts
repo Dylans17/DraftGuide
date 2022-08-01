@@ -17,5 +17,6 @@ export default defineConfig({
       ]
     }
   },
-  //root: resolve(__dirname, "src")
+  //root: resolve(__dirname, "src") //Project root directory (defaults to cwd)
+  base: './' //Base public path when served in development or production (Default: /)
 });
