@@ -1,27 +1,50 @@
+import * as util from "./util.js";
 import { depths } from "./depthChart.js";
 import { players, version } from "./rankings.js";
 import { byeweek } from "./byeweek.js";
 
 let array = players
-let namebox = document.getElementById("namebox")
 let position = "Overall"
+//todo: change checkedList to a Set
 let checkedList = JSON.parse(localStorage.checkedList || "[]");
-document.getElementById("position")?.addEventListener("change",(e)=>{
-  position = e.srcElement.value;
+
+//verify that all elements exist and place into new object (should also prevent duplicate searches)
+let doc = {
+  namebox: document.getElementById("namebox"),
+  version: document.getElementById("version"),
+  clear: document.getElementById("clear"),
+  search: document.getElementById("search") as HTMLInputElement,
+  position: document.getElementById("position") as HTMLSelectElement,
+  hideP: document.getElementById("hideP") as HTMLInputElement
+};
+
+// now null assertions are justified
+if (Object.values(doc).some(property => property === null)) {
+  throw new Error("Missing html element in doc defintion!");
+}
+
+doc.position.addEventListener("change", () => {
+  position = doc.position.value;
   display();
-})
+});
+
+//version: number, localStorage.draftVersion: string
 if (version != localStorage.draftVersion) {
   localStorage.draftVersion = version;
   localStorage.checkedList = "[]";
   document.location.reload();
 }
-document.getElementById("version").innerHTML = version;
 
-document.getElementById("clear").addEventListener("click",()=>{search("");document.getElementById("search").value = ""})
-document.getElementById("clear").addEventListener("dblclick",clearLocal);
 
-document.getElementById("search").addEventListener("input",(e)=>{search(e.srcElement.value)})
-function search(txt) {
+
+doc.version!.innerHTML = version;
+
+doc.clear!.addEventListener("click", () => {search("");doc.search.value = ""})
+doc.clear!.addEventListener("dblclick", clearLocal);
+
+doc.search.addEventListener("input", () => {search(doc.search.value)})
+
+function search(txt: string) {
   if (txt == "") {
     array = players
     display()
@@ -41,36 +64,39 @@ function search(txt) {
 }
 
 function display() {
-  namebox.innerHTML = '';
+  doc.namebox!.innerHTML = '';
   let div = document.createElement('div')
-  let a = document.createElement('a');
+  let p = document.createElement('p');
   let inj = document.createElement('strong');
   let documentFragment = document.createDocumentFragment();
   for (let obj of array) {
-    if (obj.pos == position || position == "Overall" || rbwr(obj)) {
-      let cloneDiv= div.cloneNode(true)
-      let cloneA = a.cloneNode(true);
+    if (obj.pos === position || position === "Overall" || rbwr(obj)) {
+      let cloneDiv = div.cloneNode(true) as typeof div;
+      let cloneP = p.cloneNode(true) as typeof p;
       let depth = findDepthStatus(obj.name) + 1;
-      cloneA.text = `${obj.id+1}: ${obj.name} (${obj.pos}${bracketNum(depth)} - ${obj.team}${byeweek[obj.team]})`;
-      cloneA.href = `javascript:toggle(${obj.id});`
+      cloneP.innerText = `${obj.id+1}: ${obj.name} (${obj.pos}${bracketNum(depth)} - ${obj.team}${byeweek[obj.team]})`;
+      cloneP.addEventListener("click", toggle.bind(null, obj.id));
+
       if (obj.checked) {
-        cloneA.className = "checked";
+        cloneP.className = "checked";
         cloneDiv.className = "checked";
       }
-      cloneDiv.appendChild(cloneA);
+      cloneDiv.appendChild(cloneP);
       if (obj.inj) {
-        let cloneInj = inj.cloneNode(true);
+        let cloneInj = inj.cloneNode(true) as typeof inj;
         cloneInj.innerHTML = "?";
-        cloneInj.addEventListener("click",()=>{alert(obj.inj)})
+        cloneInj.addEventListener("click", () => {alert(obj.inj)})
         cloneDiv.appendChild(cloneInj);
       }
       documentFragment.appendChild(cloneDiv)
     }
   }
-  namebox.appendChild(documentFragment);
+  doc.namebox!.appendChild(documentFragment);
 }
 
-function findDepthStatus(player) {
+//todo: this is horrible
+//make it O(1) with lookup table
+function findDepthStatus(player: string) {
   for (let list of depths) {
     let temp = list.indexOf(player)
     if (temp + 1)//returns true for all numbers except -1 where nothing is found
@@ -78,15 +104,18 @@ function findDepthStatus(player) {
   }
 }
 
-function bracketNum(num) {
+function bracketNum(num: number) {
   if (isNaN(num)) return ""
   else return `[${num}]`
 }
-function rbwr(obj) { //returns if position is running back or wide reciever
+
+//todo: remove this
+function rbwr(obj: any) { //returns if position is running back or wide reciever
   return (position == "RB/WR" && (obj.pos == "RB" || obj.pos == "WR"))
 }
 function init() {
-  for (let i in players) {
+  let i: string | number;
+  for (i in players) {
     i = parseInt(i);
     players[i].id = i
     if (checkedList.indexOf(i)+1) { //returns true for all numbers except -1 where nothing is found
@@ -100,10 +129,10 @@ function init() {
 }
 init()
 
-function toggle(id) {
+function toggle(id: number) {
   players[id].checked = !players[id].checked
   if (checkedList.indexOf(id)+1) { //returns true for all numbers except -1 where nothing is found
-    checkedList.splice(checkedList.indexOf(id),1)
+    checkedList.splice(checkedList.indexOf(id), 1)
   }
   else {
     checkedList.push(id)
@@ -112,12 +141,13 @@ function toggle(id) {
   display()
 }
 
-document.getElementById("hideP").addEventListener("change",hideP)
-function hideP(e) {
-  hide = e.srcElement.checked
+doc.hideP!.addEventListener("change", hideP)
+let hide: boolean;
+function hideP(e: Event) {
+  hide = doc.hideP!.checked
   if (hide) {
     let sheet = document.createElement('style')
-    sheet.innerHTML = ".checked {display:none;}";
+    sheet.innerHTML = ".checked { display: none; }";
     document.head.appendChild(sheet);
   }
   else {
@@ -127,7 +157,7 @@ function hideP(e) {
 
 function clearLocal() {
   const response = prompt("Enter 'clear' to confirm you want to reset.");
-  if (response && response.toLowerCase() == "clear") {
+  if (response && response.toLowerCase() === "clear") {
     localStorage.checkedList = "[]";
     document.location.reload();
   }
