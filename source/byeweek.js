@@ -1,4 +1,4 @@
-let byeweek = {LAR:"[11]",
+export let byeweek = {LAR:"[11]",
 PIT:"[7]",
 BAL:"[8]",
 WAS:"[9]",

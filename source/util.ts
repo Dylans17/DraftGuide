@@ -1,4 +1,4 @@
-function getGetParameters() {
+export function getGetParameters() {
     const result: {[key:string]: string} = {};
     for (let pair of window.location.search.substring(1).split("&")) {
       let [key, value] = pair.split("=");
@@ -7,13 +7,13 @@ function getGetParameters() {
     return result;
   }
   
-  async function getSheet(sheetName:string, key:string) {
+  export async function getSheet(sheetName:string, key:string) {
     if (key == undefined) {
       key = getGetParameters().key;
     }
     if (key == undefined) {throw new Error("Google sheet key not defined!");}
     let tqx = "out:json";
-    tqx += ";responseHandler:";
+    tqx += ";responseHandler:a";
     //todo: add signature and no new data response
     //tqx += `;sig:${signature}`
     let response = await fetch(`https://docs.google.com/spreadsheets/d/${key}/gviz/tq?tqx=${tqx}&sheet=${sheetName}`);
@@ -29,20 +29,20 @@ function getGetParameters() {
     return JSON.parse(innerContent);
   }
   
-  async function getAllData(forceReset:boolean) {
+  export async function getAllData(forceReset:boolean) {
     const key = getGetParameters().key;
     return Promise.all([getByeWeeks(forceReset, key), getDepthCharts(forceReset, key), getRankings(forceReset, key)]);
   }
   
-  async function getByeWeeks(forceReset:boolean, key:string) {
+  export async function getByeWeeks(forceReset:boolean, key:string) {
   
   }
   
-  async function getDepthCharts(forceReset:boolean, key:string) {
+  export async function getDepthCharts(forceReset:boolean, key:string) {
   
   }
   
-  async function getRankings(forceReset:boolean, key:string) {
+  export async function getRankings(forceReset:boolean, key:string) {
   
   }
   

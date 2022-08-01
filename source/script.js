@@ -1,8 +1,12 @@
+import { depths } from "./depthChart.js";
+import { players, version } from "./rankings.js";
+import { byeweek } from "./byeweek.js";
+
 let array = players
 let namebox = document.getElementById("namebox")
 let position = "Overall"
 let checkedList = JSON.parse(localStorage.checkedList || "[]");
-document.getElementById("position").addEventListener("change",(e)=>{
+document.getElementById("position")?.addEventListener("change",(e)=>{
   position = e.srcElement.value;
   display();
 })
