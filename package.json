@@ -4,7 +4,7 @@
   "description": "Use html to display, cross off and search for nfl players in google sheet.",
   "main": "index.html",
   "scripts": {
-    "build": "npx tsc",
+    "build": "mkdir -p build && cp source/*.html source/*.js build/ && npx tsc",
     "deploy": "npx gh-pages -d build"
   },
   "repository": {
