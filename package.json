@@ -2,7 +2,6 @@
   "name": "draftguide",
   "version": "1.0.0",
   "description": "Use html to display, cross off and search for nfl players in google sheet.",
-  "main": "index.html",
   "scripts": {
     "build": "mkdir -p build && cp source/*.html source/*.js build/ && npx tsc",
     "deploy": "npx gh-pages -d build"
@@ -18,7 +17,6 @@
   },
   "homepage": "https://github.com/Dylans17/DraftGuide#readme",
   "devDependencies": {
-    "gh-pages": "^4.0.0",
     "typescript": "^4.7.4"
   }
 }
