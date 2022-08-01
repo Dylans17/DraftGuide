@@ -1,10 +1,12 @@
 {
   "name": "draftguide",
   "version": "1.0.0",
-  "description": "Use html to display, cross off and search for nfl players in google sheet.",
+  "description": "Use solid to display, cross off and search for nfl players from google sheet data.",
   "scripts": {
-    "build": "mkdir -p build && cp source/*.html source/*.js build/ && npx tsc",
-    "deploy": "npx gh-pages -d build"
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
   },
   "repository": {
     "type": "git",
@@ -17,6 +19,12 @@
   },
   "homepage": "https://github.com/Dylans17/DraftGuide#readme",
   "devDependencies": {
-    "typescript": "^4.7.4"
+    "@types/node": "^18.6.3",
+    "typescript": "^4.7.4",
+    "vite": "^3.0.0",
+    "vite-plugin-solid": "^2.3.0"
+  },
+  "dependencies": {
+    "solid-js": "^1.4.7"
   }
 }
