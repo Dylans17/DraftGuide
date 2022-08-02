@@ -2,8 +2,7 @@ import { JSX, lazy } from "solid-js";
 import { Navigate, Route, Routes } from "@solidjs/router";
 import { getFileName } from "./util";
 // glob import all components in ./component-pages
-const pages = import.meta.glob('./component-pages/*.jsx'); 
-
+const pages = import.meta.glob('./component-pages/*');
 type ImportComponent = () => Promise<{ default: () => JSX.Element;}>;
 
 export default () => {
