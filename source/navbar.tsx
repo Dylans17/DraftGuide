@@ -1,3 +1,4 @@
+import { NavLink } from "@solidjs/router";
 import "./navbar.css";
 
 export default function() {
@@ -10,10 +11,10 @@ export default function() {
                 <span class="line line3"></span>
             </div>
             <ul class="menu-items">
-                <li><a href="/">Home</a></li>
-                <li><a href="/settings">Settings</a></li>
-                <li><a href="/bye-weeks">NFL Bye Weeks</a></li>
-                <li><a href="/my-team">My Team</a></li>
+                <li><NavLink href="/">Home</NavLink></li>
+                <li><NavLink href="/settings">Settings</NavLink></li>
+                <li><NavLink href="/bye-weeks">NFL Bye Weeks</NavLink></li>
+                <li><NavLink href="/my-team">My Team</NavLink></li>
             </ul>
             <h1 class="logo">Draft Guide</h1>
         </div>
