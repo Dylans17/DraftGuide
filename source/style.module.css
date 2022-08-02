@@ -1,8 +1,8 @@
-  .otherSelected {
+  .selected-other {
     color:red;
     text-decoration: line-through;
   }
-  .mySelection {
+  .selected-user {
     color: green;
     text-decoration: line-through;
 }
