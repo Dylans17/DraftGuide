@@ -1,0 +1,8 @@
+  .otherSelected {
+    color:red;
+    text-decoration: line-through;
+  }
+  .mySelection {
+    color: green;
+    text-decoration: line-through;
+}

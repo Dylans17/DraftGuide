@@ -30,6 +30,7 @@ export function getGetParameters() {
   }
   
   export async function getAllData(forceReset:boolean | undefined, key: string | undefined) {
+    //todo: if forceReset == false, check cache first!
     if (forceReset === undefined) {
       forceReset = false;
     }
@@ -39,15 +40,15 @@ export function getGetParameters() {
     return Promise.all([getByeWeeks(forceReset, key), getDepthCharts(forceReset, key), getRankings(forceReset, key)]);
   }
   
-  export async function getByeWeeks(forceReset:boolean, key:string) {
+  async function getByeWeeks(forceReset:boolean, key:string) {
   
   }
   
-  export async function getDepthCharts(forceReset:boolean, key:string) {
+  async function getDepthCharts(forceReset:boolean, key:string) {
   
   }
   
-  export async function getRankings(forceReset:boolean, key:string) {
+  async function getRankings(forceReset:boolean, key:string) {
   
   }
   
