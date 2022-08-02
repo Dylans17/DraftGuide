@@ -1,3 +1,3 @@
 export default function() {
-    return <h1>Settings Page</h1>
+    return <h1>Bye Weeks Page</h1>
 };
