@@ -1,11 +1,14 @@
 import { render } from "solid-js/web";
-import style from "./style.module.css";
+import { Router } from "@solidjs/router";
 import Navbar from "./navbar";
-import "./navbar.css";
+import Routes from "./routes";
 
 
 function Index() {
-    return <Navbar></Navbar>
+  return <Router>
+    <Navbar />
+    <Routes />
+  </Router>
 }
 
 const root = document.getElementById("root") as HTMLElement;
