@@ -8,10 +8,6 @@
   margin: 0;
 }
 
-.html {
-  font-size: 62.5%;
-}
-
 body {
   font-family: "Poppins", sans-serif;
 }
@@ -22,28 +18,6 @@ body {
   max-width: 1200px;
   width: 90%;
   margin: auto;
-}
-
-.btn {
-  display: inline-block;
-  padding: 0.5em 1.5em;
-  text-decoration: none;
-  border-radius: 50px;
-  cursor: pointer;
-  outline: none;
-  margin-top: 1em;
-  text-transform: uppercase;
-  font-weight: small;
-}
-
-.btn-primary {
-  color: #fff;
-  background: #16a083;
-}
-
-.btn-primary:hover {
-  background: #117964;
-  transition: background 0.3s ease-in-out;
 }
 
 /* ............/navbar/............ *
@@ -85,14 +59,21 @@ body {
   font-size: 1.2rem;
 }
 
-.menu-items a {
+.menu-items .inactive {
   text-decoration: none;
-  color: #444;
-  font-weight: 500;
+  color: #555;
+  font-weight: normal;
   transition: color 0.3s ease-in-out;
 }
 
-.menu-items a:hover {
+.menu-items .active {
+  text-decoration: none;
+  color: #000;
+  /* font-weight: bold; */
+  transition: color 0.3s ease-in-out;
+}
+
+.menu-items .inactive:hover, .menu-items .active:hover {
   color: #117964;
   transition: color 0.3s ease-in-out;
 }
@@ -210,24 +191,6 @@ body {
     transform: rotate(-35deg);
   }
 
-  /* ......./ food /......... */
-
-  .food-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .food-type:not(:last-child) {
-    margin-bottom: 3rem;
-  }
-
-  .food-type {
-    box-shadow: 5px 5px 10px 0 #aaa;
-  }
-
-  .img-container {
-    margin: 0;
-  }
 }
 
 @media (max-width: 500px) {
@@ -237,34 +200,6 @@ body {
 
   .navbar .menu-items li{
       font-size: 1.6rem;
-  }
-
-  .testimonial-container {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .food-menu-container img {
-    margin: auto;
-  }
-
-  .food-menu-item {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .form-container {
-    width: 90%;
-  }
-
-  .contact-container {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .contact-img {
-    width: 90%;
-    margin: 3rem auto;
   }
 
   .logo {
@@ -281,18 +216,3 @@ body {
   }
 }
 
-@media (min-width: 769px) and (max-width: 1200px) {
-  .img-container h3 {
-    font-size: 1.5rem;
-  }
-
-  .img-container .btn {
-    font-size: 0.7rem;
-  }
-}
-
-@media (orientation: landscape) and (max-height: 500px) {
-  .showcase-area {
-    height: 50vmax;
-  }
-}
