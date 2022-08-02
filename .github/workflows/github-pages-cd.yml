@@ -30,6 +30,8 @@ jobs:
         node-version: '16.x'
     - run: npm ci
     - run: npm run build
+      env: 
+        VITE_ROUTER_BASE: /DraftGuide
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v1
       with:
