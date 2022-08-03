@@ -6,14 +6,14 @@ import classes from "./css/table.module.css";
 //literally don't even need reactivity (byeWeeks is not a signal)
 export default function() {
   let byeWeeks = getByeWeeks();
-  return <div>
+  return <>
     <h1>Bye Weeks</h1>
     <Show
     when={byeWeeks}
     fallback={<p>You have not added a sheet yet. Go to settings and add a sheet!</p>}
     >
       <table class={classes.table}>
-        <thead>
+        <thead style={ {top: "50px"} }>
           <tr>
             <th>Team</th>
             <th>Bye Week</th>
@@ -30,5 +30,5 @@ export default function() {
         </tbody>
       </table>
     </Show>
-  </div>
+  </>
 };

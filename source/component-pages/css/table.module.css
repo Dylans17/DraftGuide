@@ -17,8 +17,7 @@
   background-color: #fff;
 }
 
-.table thead th {
+.table thead {
   position: sticky;
-  top: 50px;
   background: #aaa;
 } 
