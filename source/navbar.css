@@ -1,8 +1,9 @@
-/* Modified from original source: https://codepen.io/alvarotrigo/pen/XWejzjR */
+/* Significantly modified from original source: https://codepen.io/alvarotrigo/pen/XWejzjR */
 
-*,
-*::after,
-*::before {
+.navbar *,
+.navbar *::after,
+.navbar *::before,
+body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
@@ -10,6 +11,7 @@
 
 body {
   font-family: "Poppins", sans-serif;
+  overflow-y: scroll;
 }
 
 /* ///////////..utility classes../////////// */
@@ -30,12 +32,12 @@ body {
 }
 
 .navbar {
-  box-shadow: 0px 5px 10px 0px #aaa;
   position: sticky;
+  top: 0;
   width: 100%;
-  background: #fff;
-  color: #000;
-  opacity: 0.85;
+  background: #000;
+  color: #fff;
+  /* opacity: 0.85; */
   height: 50px;
   z-index: 12;
 }
@@ -61,20 +63,13 @@ body {
 
 .menu-items .inactive {
   text-decoration: none;
-  color: #555;
-  font-weight: normal;
+  color: #fff;
   transition: color 0.3s ease-in-out;
 }
 
 .menu-items .active {
   text-decoration: none;
-  color: #000;
-  /* font-weight: bold; */
-  transition: color 0.3s ease-in-out;
-}
-
-.menu-items .inactive:hover, .menu-items .active:hover {
-  color: #117964;
+  color: #aaa;
   transition: color 0.3s ease-in-out;
 }
 
@@ -85,6 +80,13 @@ body {
 }
 
 /* ......../ media query /.......... */
+
+@media (min-width: 768px) {
+  .menu-items .inactive:hover, .menu-items .active:hover {
+    color: #117964;
+    transition: color 0.3s ease-in-out;
+  }
+}
 
 @media (max-width: 768px) {
   .navbar {
@@ -160,6 +162,14 @@ body {
     padding-left: 50px;
     transition: transform 0.5s ease-in-out;
     box-shadow: 5px 0px 10px 0px #aaa;
+  }
+
+  .menu-items .inactive {
+    color: #000;
+  }
+  
+  .menu-items .active {
+    color: #117964;
   }
 
   .navbar .menu-items li {
