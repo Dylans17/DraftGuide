@@ -2,6 +2,7 @@ import { assert } from "console";
 import { type } from "os";
 import { Primitive, ValueOf } from "type-fest";
 
+
 export function getFileName(sourceFile: string, extension: string): string {
   let regex = new RegExp(`[a-z-]+(?=\\.${extension}$)`);
   let result = regex.exec(sourceFile);
@@ -37,6 +38,14 @@ export type Row = {
   } | null)[]
 }
 
+/**
+ * fetches a google sheet
+ * @see {@link Sheet} for return type
+ * @see {@link sheetKey} for getting the key
+ * @param sheetName The name of the sheet on the google sheet. (Bottom of page)
+ * @param key The key of the google doc
+ * @returns sheet
+ */
 export async function fetchSheet(sheetName: string, key: string): Promise<Sheet> {
   if (key == undefined) {throw new Error("Google sheet key not defined!");}
   let tqx = "out:json";
@@ -56,6 +65,17 @@ export async function fetchSheet(sheetName: string, key: string): Promise<Sheet>
   return JSON.parse(innerContent);
 }
 
+/**
+ * gets or sets the sheet key
+ * @param newSheetKey if passed as string, replace the stored sheet key
+ * @returns sheet key if exists and no parameters passed, otherwise null
+ * @example
+ * For `https://docs.google.com/spreadsheets/d/KEY-NAME-HASH-HERE/edit`,
+ * you would use 
+ * ```ts
+ * sheetKey("KEY-NAME-HASH-HERE")
+ * ```
+ */
 export function sheetKey(newSheetKey: string | undefined):string | null {
   if (newSheetKey !== undefined) {
     localStorage.setItem("sheet-key", newSheetKey);
@@ -88,6 +108,10 @@ const byeWeeksCols:Column[] = [
   }
 ];
 
+/**
+ * gets the bye weeks if stored
+ * @returns bye week for each team in a Map or false if not stored
+ */
 export function getByeWeeks(): Map<string, number> | false {
   let ls = localStorage.getItem("byeWeeks");
   if (ls !== null) {
@@ -96,6 +120,13 @@ export function getByeWeeks(): Map<string, number> | false {
   return false;
 }
 
+/**
+ * fetches and stores the bye weeks from google doc
+ * uses "bye-week" as sheet name
+ * @see {@link sheetKey} for getting the key
+ * @param key The key of the google doc
+ * @returns bye week for each team in a Map
+ */
 export async function fetchByeWeeks(key: string): Promise<Map<string, number>> {
   let sheetResult = await fetchSheet("bye-week", key);
   // verify that the columns are correct
@@ -158,6 +189,11 @@ const rankingsCols:Column[] = [
   }
 ]
 
+/**
+ * gets player rankings if stored
+ * @returns Array of every player or false if not stored
+ * @see {@link Player} for information about players
+ */
 export function getRankings(): Player[] | false {
   let ls = localStorage.getItem("rankings");
   if (ls !== null) {
@@ -166,6 +202,14 @@ export function getRankings(): Player[] | false {
   return false;
 }
 
+/**
+ * fetches and stores the player rankings from google doc
+ * uses "rankings" as sheet name
+ * @see {@link sheetKey} for getting the key
+ * @param key The key of the google doc
+ * @returns Array of every player
+ * @see {@link Player} for information about players
+ */
 export async function fetchRankings(key: string): Promise<Player[]> {
     
   let sheetResult = await fetchSheet("rankings", key);
