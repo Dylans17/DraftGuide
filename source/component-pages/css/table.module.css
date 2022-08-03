@@ -10,15 +10,15 @@
 }
 
 .table tr:nth-child(even) {
-  background-color: #FFF;
+  background-color: #aaa;
 }
 
 .table tr:nth-child(odd) {
-  background-color: #AAA;
+  background-color: #fff;
 }
 
 .table thead th {
   position: sticky;
-  top: 0;
-  background: #FFF;
+  top: 50px;
+  background: #aaa;
 } 

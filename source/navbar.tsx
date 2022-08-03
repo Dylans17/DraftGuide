@@ -1,4 +1,5 @@
 import { NavLink } from "@solidjs/router";
+import { createSignal } from "solid-js";
 import "./navbar.css";
 import { getFileName } from "./util";
 
@@ -13,16 +14,17 @@ const pages = Object.keys(import.meta.glob('./component-pages/*.tsx')).sort((a:s
 });
 
 export default function() {
+  let [checked, setChecked] = createSignal(false);
   let NavLinkFromPages = () => {
     return pages.map((sourceFile, _) => {
       let fileName = getFileName(sourceFile, "tsx");
       let title = fileName.split('-').map(s => s[0].toUpperCase() + s.slice(1)).join(' ');
-      return <li><NavLink href={fileName}>{title}</NavLink></li>
+      return <li><NavLink href={fileName} onclick={()=>setChecked(false)}>{title}</NavLink></li>
     });
   }
   return <nav class="navbar">
     <div class="navbar-container container">
-      <input type="checkbox" />
+      <input type="checkbox" checked={checked()} onclick={()=>setChecked(!checked())} />
       <div class="hamburger-lines">
         <span class="line line1"></span>
         <span class="line line2"></span>
