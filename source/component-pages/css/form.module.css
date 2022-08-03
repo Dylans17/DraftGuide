@@ -1,0 +1,14 @@
+.formul {
+  list-style: none;
+  padding: 0;
+  margin-left: 10px;
+}
+
+.formul label, .lblock {
+  display: inline-block;
+  width: 150px;
+}
+
+.formul li {
+  margin-top: .5em;
+}
