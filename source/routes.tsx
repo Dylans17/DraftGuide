@@ -13,8 +13,6 @@ export default () => {
   }
   return <Routes> 
     <RouteFromComponentMap />
-    <Route path="/">
-      <Navigate href="/home" />
-    </Route>
+    <Route path="/" component={()=><Navigate href="/home" />} />
   </Routes>
 }
