@@ -18,7 +18,10 @@ export default function() {
   let pD = getRankings();
   let bW = getByeWeeks();
   if (!pD || !bW) {
-    return <p>You have set your sheet key yet. Go to settings and set your sheet key!</p>;
+    return <>
+      <h1>Main Page</h1>
+      <p>You have set your sheet key yet. Go to settings and set your sheet key!</p>;
+    </>
   }
 
   let playerData = pD;
