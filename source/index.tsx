@@ -3,7 +3,7 @@ import { Router } from "@solidjs/router";
 import Navbar from "./navbar";
 import Routes from "./routes";
 
-let routerBase: string | undefined = import.meta.env.VITE_ROUTER_BASE
+let routerBase: string = import.meta.env.VITE_ROUTER_BASE || "/";
 
 function Index() {
   return <Router base={routerBase}>
