@@ -3,6 +3,8 @@ import { fetchSheetAll, getSheetKey, setSheetKey } from "../util";
 import { reset } from "./home";
 import styles from "./css/form.module.css";
 
+const sheetRegEx = /^(?:https:)?\/?\/?docs.google.com\/spreadsheets\/d\/([\w-]*)\/?(?:edit(?:#gid=\d*)?)?$/
+
 export default function() {
   let [sheetKeyLocal, setSheetKeyLocal] = createSignal(getSheetKey());
   let [sheetValid, setSheetValid] = createSignal((sheetKeyLocal() !== null) as boolean | null)
@@ -22,6 +24,19 @@ export default function() {
 
   }
 
+  let sheetURLextract = (e: ClipboardEvent) => {
+    let clipboard = e.clipboardData?.getData("text/plain");
+    if (clipboard === undefined) {return;}
+    let execResults = sheetRegEx.exec(clipboard);
+    if (execResults != null) {
+      e.preventDefault();
+      setSheetValid(null);
+      setSheetKeyLocal(execResults[1]);
+      checkNewId()
+    }
+  }
+  let sIdElm: HTMLInputElement;
+
   return <>
     <h1>Settings Page</h1>
     <h2>Draft Info (optional)</h2>
@@ -39,7 +54,14 @@ export default function() {
     <h2>Data Management</h2>
     <ul class={styles.formul}>
       <li>
-        <label for="sId">Sheet ID: </label><input id="sId" oninput={(e)=>{setSheetKeyLocal((e.target as HTMLInputElement).value); setSheetValid(null)}} onchange={checkNewId} value={sheetKeyLocal()? sheetKeyLocal() as string: ""} />
+        <label for="sId">Sheet ID: </label>
+        <input id="sId" 
+          ref={(elm)=>sIdElm = elm} 
+          onpaste={sheetURLextract} 
+          oninput={()=>{setSheetKeyLocal(sIdElm.value); setSheetValid(null)}} 
+          onchange={checkNewId} 
+          value={sheetKeyLocal()? sheetKeyLocal() as string: ""} 
+        />
         <span style={`color: ${sheetValid()?"green":"red"};`}>{sheetValid() === null? "" : sheetValid()? '✓' : '✗'}</span>
       </li>
       <li>
