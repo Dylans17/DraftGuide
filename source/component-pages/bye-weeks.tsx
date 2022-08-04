@@ -1,5 +1,5 @@
-import { For, Show } from "solid-js"
-import { getByeWeeks } from "../util"
+import { For, Show } from "solid-js";
+import { getByeWeeks } from "../util";
 import classes from "./css/table.module.css";
 
 
@@ -10,7 +10,7 @@ export default function() {
     <h1>Bye Weeks</h1>
     <Show
     when={byeWeeks}
-    fallback={<p>You have not added a sheet yet. Go to settings and add a sheet!</p>}
+    fallback={<p>You have set your sheet key yet. Go to settings and set your sheet key!</p>}
     >
       <table class={classes.table}>
         <thead style={ {top: "50px"} }>

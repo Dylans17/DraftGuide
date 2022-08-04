@@ -263,7 +263,7 @@ export async function fetchRankings(key: string): Promise<Player[]> {
       // would be very unexpected since verifying the columns should do the job
       throw new Error("Highly unexpected type error from rankings columns!\nMake a new issue with your sheet id on GitHub!");
     }
-    let position = Position["DST" as keyof typeof Position];
+    let position = Position[positionStr as keyof typeof Position];
     return {
       name,
       position,
