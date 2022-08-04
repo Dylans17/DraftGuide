@@ -1,12 +1,12 @@
 import { render } from "solid-js/web";
-import { Router } from "@solidjs/router";
+import { hashIntegration, Router } from "@solidjs/router";
 import Navbar from "./navbar";
 import Routes from "./routes";
 
 let routerBase: string = import.meta.env.VITE_ROUTER_BASE || "/";
 
 function Index() {
-  return <Router base={routerBase}>
+  return <Router base={routerBase} source={hashIntegration()}>
     <Navbar />
     <Routes />
   </Router>
