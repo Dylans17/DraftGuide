@@ -21,7 +21,7 @@ export default function() {
   function fetchAll() {
     confirm("Are you sure you want to fetch the new data?\nThis will also reset your selections!");
     fetchSheetAll(sheetKeyLocal()!);
-
+    reset();
   }
 
   let sheetURLextract = (e: ClipboardEvent) => {
