@@ -38,8 +38,7 @@ export default defineConfig({
     outDir: "build",
     rollupOptions: {
       input: [ // list of input files
-        resolve(__dirname, "index.html"),
-        resolve(__dirname, "robots.txt")
+        resolve(__dirname, "index.html")
       ]
     }
   },
