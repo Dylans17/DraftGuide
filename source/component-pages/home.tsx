@@ -20,7 +20,7 @@ export default function() {
   if (!pD || !bW) {
     return <>
       <h1>Main Page</h1>
-      <p>You have set your sheet key yet. Go to settings and set your sheet key!</p>;
+      <p>You have not set your sheet key yet. Go to settings and set your sheet key!</p>;
     </>
   }
 
