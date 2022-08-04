@@ -10,7 +10,7 @@ export default function() {
     <h1>Bye Weeks</h1>
     <Show
     when={byeWeeks}
-    fallback={<p>You have set your sheet key yet. Go to settings and set your sheet key!</p>}
+    fallback={<p>You have not set your sheet key yet. Go to settings and set your sheet key!</p>}
     >
       <table class={classes.table}>
         <thead style={ {top: "50px"} }>
