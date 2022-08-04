@@ -41,11 +41,12 @@ export type Row = {
 /**
  * fetches a google sheet
  * @see {@link Sheet} for return type
- * @see {@link sheetKey} for getting the key
+ * @see {@link getSheetKey} for getting the key
  * @param sheetName The name of the sheet on the google sheet. (Bottom of page)
  * @param key The key of the google doc
  * @returns sheet
  */
+//@see {@link https://developers.google.com/chart/interactive/docs/querylanguage | Google Query Docs} for extending this function.
 export async function fetchSheet(sheetName: string, key: string): Promise<Sheet> {
   if (key == undefined) {throw new Error("Google sheet key not defined!");}
   let tqx = "out:json";
@@ -66,21 +67,35 @@ export async function fetchSheet(sheetName: string, key: string): Promise<Sheet>
 }
 
 /**
+ * gets the stored sheet key
+ * @returns sheet key if stored, otherwise null
+ */
+export function getSheetKey():string | null {
+  return localStorage.getItem("sheet-key");
+}
+
+/**
  * gets or sets the sheet key
  * @param newSheetKey if passed as string, replace the stored sheet key
- * @returns sheet key if exists and no parameters passed, otherwise null
+ * @returns if the sheet key was successfully changed
+ * @see {@link fetchSheetAll} for fetching all information after updating the key.
  * @example
- * For `https://docs.google.com/spreadsheets/d/KEY-NAME-HASH-HERE/edit`,
+ * For `https://docs.google.com/spreadsheets/d/KEY-NAME-HERE/edit`,
  * you would use 
  * ```ts
- * sheetKey("KEY-NAME-HASH-HERE")
+ * setSheetKey("KEY-NAME-HERE"); //returns false since that key is not valid
  * ```
  */
-export function sheetKey(newSheetKey: string | undefined):string | null {
-  if (newSheetKey !== undefined) {
-    localStorage.setItem("sheet-key", newSheetKey);
+export async function setSheetKey(newSheetKey: string):Promise<boolean> {
+  if (!navigator.onLine) {return false;}
+  try {
+    let response = await fetch(`https://docs.google.com/spreadsheets/d/${newSheetKey}/edit`);
+    if (!response.ok) {throw new Error()}
+  } catch {
+    return false;
   }
-  return localStorage.getItem("rankings");
+  localStorage.setItem("sheet-key", newSheetKey);
+  return true;
 }
 
 export type Player = {
@@ -109,6 +124,16 @@ const byeWeeksCols:Column[] = [
 ];
 
 /**
+ * Fetch and ignore return result of all sheet data.
+ * @see {@link getSheetKey} for getting the key
+ * @param key The key of the google doc
+ */
+export async function fetchSheetAll(key: string) {
+  await Promise.all([fetchByeWeeks(key), fetchRankings(key)]);
+  return;
+}
+
+/**
  * gets the bye weeks if stored
  * @returns bye week for each team in a Map or false if not stored
  */
@@ -123,7 +148,7 @@ export function getByeWeeks(): Map<string, number> | false {
 /**
  * fetches and stores the bye weeks from google doc
  * uses "bye-week" as sheet name
- * @see {@link sheetKey} for getting the key
+ * @see {@link getSheetKey} for getting the key
  * @param key The key of the google doc
  * @returns bye week for each team in a Map
  */
@@ -205,7 +230,7 @@ export function getRankings(): Player[] | false {
 /**
  * fetches and stores the player rankings from google doc
  * uses "rankings" as sheet name
- * @see {@link sheetKey} for getting the key
+ * @see {@link getSheetKey} for getting the key
  * @param key The key of the google doc
  * @returns Array of every player
  * @see {@link Player} for information about players
@@ -238,7 +263,7 @@ export async function fetchRankings(key: string): Promise<Player[]> {
       // would be very unexpected since verifying the columns should do the job
       throw new Error("Highly unexpected type error from rankings columns!\nMake a new issue with your sheet id on GitHub!");
     }
-    let position = Position["DST" as keyof typeof Position];
+    let position = Position[positionStr as keyof typeof Position];
     return {
       name,
       position,

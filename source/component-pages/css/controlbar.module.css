@@ -1,0 +1,28 @@
+.controlbar {
+  position: sticky;
+  top: 50px;
+  overflow: hidden;
+  background: white;
+  z-index: 3;
+  list-style: none;
+  padding: 0 10px;
+  background-color: #aaa;
+}
+
+.controlbar input[type="text"] {
+  width: 20vw;
+}
+
+.thead {
+  top: calc(50px + 1em);
+}
+
+@media (max-width: 500px) {
+  .thead {
+    top: calc(50px + 1em / 0.65);
+  }
+
+  .hide-small {
+    display: none;
+  }
+}

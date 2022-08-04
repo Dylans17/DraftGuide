@@ -9,16 +9,72 @@
   padding: 8px;
 }
 
-.table tr:nth-child(even) {
+.table thead {
+  position: sticky;
+  background: #aaa;
+}
+
+.tbody-clickable tr {
+ cursor: pointer; 
+}
+
+
+/* DEFAULT ROW STYLE */
+
+/* even */
+:where(.table) tr {
   background-color: #aaa;
 }
 
-.table tr:nth-child(odd) {
+:where(.table) tr:nth-child(odd) {
   background-color: #fff;
 }
 
-.table thead th {
-  position: sticky;
-  top: 50px;
-  background: #aaa;
-} 
+/* even */
+.tbody-clickable tr:hover {
+  background-color: #99a;
+}
+
+.tbody-clickable tr:hover:nth-child(odd) {
+  background-color: #eef;
+}
+
+/* USER SELECTED ROW STYLE */
+
+/* even */
+.selected-user {
+  background-color: #3a3;
+}
+
+.selected-user:nth-child(odd) {
+  background-color: #8f8;
+}
+
+/* even */
+.tbody-clickable .selected-user:hover {
+  background-color: #293;
+}
+
+.tbody-clickable .selected-user:hover:nth-child(odd) {
+  background-color: #7e8;
+}
+
+/* OTHER SELECTED ROW STYLE */
+
+/* even */
+.selected-other {
+  background-color: #a33;
+}
+
+.selected-other:nth-child(odd) {
+  background-color: #f88;
+}
+
+/* even */
+.tbody-clickable .selected-other:hover {
+  background-color: #923;
+}
+
+.tbody-clickable .selected-other:hover:nth-child(odd) {
+  background-color: #e78;
+}

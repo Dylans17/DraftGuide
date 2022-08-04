@@ -1,19 +1,19 @@
-import { For, Show } from "solid-js"
-import { getByeWeeks } from "../util"
+import { For, Show } from "solid-js";
+import { getByeWeeks } from "../util";
 import classes from "./css/table.module.css";
 
 
 //literally don't even need reactivity (byeWeeks is not a signal)
 export default function() {
   let byeWeeks = getByeWeeks();
-  return <div>
+  return <>
     <h1>Bye Weeks</h1>
     <Show
     when={byeWeeks}
-    fallback={<p>You have not added a sheet yet. Go to settings and add a sheet!</p>}
+    fallback={<p>You have set your sheet key yet. Go to settings and set your sheet key!</p>}
     >
       <table class={classes.table}>
-        <thead>
+        <thead style={ {top: "50px"} }>
           <tr>
             <th>Team</th>
             <th>Bye Week</th>
@@ -30,5 +30,5 @@ export default function() {
         </tbody>
       </table>
     </Show>
-  </div>
+  </>
 };
