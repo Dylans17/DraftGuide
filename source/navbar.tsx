@@ -34,6 +34,8 @@ export default function() {
       <ul class="menu-items">
         <NavLinkFromPages />
       </ul>
+      {/* Placeholder div so the links are fomatted correctly. */}
+      <div />
       <img class="logo" src={logo} />
     </div>
   </nav>
