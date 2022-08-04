@@ -47,18 +47,19 @@ export default function() {
   let [positionSelected, setPositionSelected] = createSignal("ANY");
   let [searchValue, setSearchValue] = createSignal("");
 
-  function userSelectionRemove(player: Player) {
+  function userSelectionRemove(player: Player):boolean {
     // you should only be able to remove the last user selected player without a warning
     if (userSelection[userSelection.length - 1] === player.name) {
       userSelection.pop();
+      return true;
     }
-    else {
-      let index = userSelection.findIndex((name) => name === player.name);
-      let cnfrm = confirm.bind(null, `Are you sure that you want to remove ${player.name} [pick ${index + 1} of ${userSelection.length}] from your selection?`);
-      if (index !== -1 && cnfrm()) {
-        userSelection.splice(index, 1);
-      }
+    let index = userSelection.findIndex((name) => name === player.name);
+    let cnfrm = confirm.bind(null, `Are you sure that you want to remove ${player.name} [pick ${index + 1} of ${userSelection.length}] from your selection?`);
+    if (index !== -1 && cnfrm()) {
+      userSelection.splice(index, 1);
+      return true;
     }
+    return false;
   }
 
   function toggleSelection(player: Player) {
@@ -69,7 +70,8 @@ export default function() {
         otherSelection = otherSelection.filter((name)=>name !== player.name);
       }
       else {
-        userSelectionRemove(player);
+        let removed = userSelectionRemove(player);
+        if (!removed) {return;}
       }
     }
     // if currently selected, set to unselected
