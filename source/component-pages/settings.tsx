@@ -15,6 +15,11 @@ export default function() {
       setSheetValid(false);
       return;
     }
+    let extract = sheetURLextract(sIdLocal);
+    if (extract !== null) {
+      sIdLocal = extract;
+      setSheetKeyLocal(sIdLocal);
+    }
     setSheetValid(await setSheetKey(sIdLocal));
   }
 
@@ -24,16 +29,22 @@ export default function() {
     reset();
   }
 
-  let sheetURLextract = (e: ClipboardEvent) => {
+  let sheetURLextractClipboard = (e: ClipboardEvent) => {
     let clipboard = e.clipboardData?.getData("text/plain");
-    if (clipboard === undefined) {return;}
-    let execResults = sheetRegEx.exec(clipboard);
-    if (execResults != null) {
+    let replacement: string | null;
+    if (clipboard !== undefined && (replacement = sheetURLextract(clipboard)) != null) {
       e.preventDefault();
       setSheetValid(null);
-      setSheetKeyLocal(execResults[1]);
+      setSheetKeyLocal(replacement);
       checkNewId()
     }
+  }
+  let sheetURLextract = (s: string):string | null => {
+    let execResults = sheetRegEx.exec(s);
+    if (execResults !== null) {
+      return execResults[1];
+    }
+    return null;
   }
   let sIdElm: HTMLInputElement;
 
@@ -57,7 +68,7 @@ export default function() {
         <label for="sId">Sheet ID: </label>
         <input id="sId" 
           ref={(elm)=>sIdElm = elm} 
-          onpaste={sheetURLextract} 
+          onpaste={sheetURLextractClipboard} 
           oninput={()=>{setSheetKeyLocal(sIdElm.value); setSheetValid(null)}} 
           onchange={checkNewId} 
           value={sheetKeyLocal()? sheetKeyLocal() as string: ""} 
