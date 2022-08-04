@@ -113,6 +113,10 @@ export default function() {
     return posFilterVal && selectedFilterVal && nameFilterVal;
   }
 
+  function filterAllInvalid(e: InputEvent) {
+    if (/^[^a-zA-Z]*$/.test(e.data || "")) {e.preventDefault();}
+  }
+
   onCleanup(saveSelected)
   addEventListener("beforeunload", saveSelected)
   function saveSelected() {
@@ -133,7 +137,12 @@ export default function() {
               )
             }
           </select>
-          <label for="search"> Search: </label><input value={searchValue()} id="search" type="text" oninput={(e)=>setSearchValue((e.target as HTMLInputElement).value.replace(/[^a-zA-Z]/g,""))} />
+          <label for="search"> Search: </label>
+          <input id="search" type="text" 
+            value={searchValue()}
+            onbeforeinput={(e) => /^[^a-zA-Z]+$/.test(e.data || "") && e.preventDefault()}
+            oninput={(e)=>setSearchValue((e.target as HTMLInputElement).value.replace(/[^a-zA-Z]/g,""))}
+          />
           <button>Clear</button>
         </span>
         <span style={{float: "right"}}>
