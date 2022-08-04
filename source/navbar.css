@@ -73,9 +73,11 @@ body {
 }
 
 .logo {
-  order: 1;
-  font-size: 2.3rem;
-  margin-bottom: 0.5rem;
+  position: absolute;
+  top: 4px;
+  left: 45px;
+  width: 42px;
+  height: 42px;
 }
 
 /* ......../ media query /.......... */
@@ -179,7 +181,8 @@ body {
 
   .logo {
     position: absolute;
-    top: 5px;
+    top: 4px;
+    left: auto;
     right: 15px;
     font-size: 2rem;
   }
@@ -209,13 +212,6 @@ body {
 
   .navbar .menu-items li{
       font-size: 1.6rem;
-  }
-
-  .logo {
-    position: absolute;
-    top: 06px;
-    right: 15px;
-    font-size: 3rem;
   }
 
   .navbar .menu-items li {

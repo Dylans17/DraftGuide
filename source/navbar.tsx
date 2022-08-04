@@ -2,6 +2,7 @@ import { NavLink } from "@solidjs/router";
 import { createSignal } from "solid-js";
 import "./navbar.css";
 import { getFileName } from "./util";
+import logo from "./assets/android-chrome-192x192.png";
 
 
 // glob import all components in ./component-pages
@@ -33,7 +34,7 @@ export default function() {
       <ul class="menu-items">
         <NavLinkFromPages />
       </ul>
-      <h1 class="logo">Logo</h1>
+      <img class="logo" src={logo} />
     </div>
   </nav>
 }
