@@ -1,4 +1,5 @@
 import { NavLink } from "@solidjs/router";
+import { resolve } from "path";
 import { createSignal } from "solid-js";
 import "./navbar.css";
 import { getFileName } from "./util";
@@ -35,7 +36,7 @@ export default function() {
       </ul>
       {/* Placeholder div so the links are fomatted correctly. */}
       <div />
-      <img class="logo" src="/assets/android-chrome-192x192.png" />
+      <img class="logo" src={resolve(process.env.VITE_ROUTER_BASE || "/", "/assets/android-chrome-192x192.png")} />
     </div>
   </nav>
 }
