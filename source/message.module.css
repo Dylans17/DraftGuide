@@ -1,0 +1,30 @@
+
+.popup {
+  position: fixed;
+  z-index: 30;
+  left: 30%;
+  top: 0;
+  transition: transform 1s;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 20%;
+}
+
+.hidden {
+  transform: translateY(-110%);
+}
+
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
