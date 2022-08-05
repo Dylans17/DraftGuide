@@ -36,7 +36,7 @@ export default function() {
       </ul>
       {/* Placeholder div so the links are fomatted correctly. */}
       <div />
-      <img class="logo" src={resolve(process.env.VITE_ROUTER_BASE || "/", "/assets/android-chrome-192x192.png")} />
+      <img class="logo" src={(process.env.VITE_ROUTER_BASE || "/") +"assets/android-chrome-192x192.png"} />
     </div>
   </nav>
 }
