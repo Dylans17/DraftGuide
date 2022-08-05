@@ -1,6 +1,6 @@
 import { loadEnv, defineConfig } from "vite";
 import solidPlugin from "vite-plugin-solid";
-import { resolve } from "path";
+import { join, resolve } from "path";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default ({ mode }: {mode: string}) => {
@@ -19,12 +19,12 @@ export default ({ mode }: {mode: string}) => {
           theme_color: "#ffffff",
           icons: [
             {
-              src: resolve(base, "/assets/android-chrome-192x192.png"),
+              src: join(base, "/assets/android-chrome-192x192.png"),
               sizes: "192x192",
               type: "image/png"
             },
             {
-              src: resolve(base, "/assets/android-chrome-512x512.png"),
+              src: join(base, "/assets/android-chrome-512x512.png"),
               sizes: "512x512",
               type: "image/png"
             }
