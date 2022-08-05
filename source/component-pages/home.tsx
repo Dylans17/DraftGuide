@@ -144,7 +144,7 @@ export default function() {
             onbeforeinput={(e) => /^[^a-zA-Z]+$/.test(e.data || "") && e.preventDefault()}
             oninput={(e)=>setSearchValue((e.target as HTMLInputElement).value.replace(/[^a-zA-Z]/g,""))}
           />
-          <button>Clear</button>
+          <button onclick={()=>setSearchValue("")}>Clear</button>
         </span>
         <span style={{float: "right"}}>
           <label>Hide<span class={controlbar.hideSmall}> Selected</span>: <input type="checkbox" checked={selectedHidden()} onchange={()=>setSelectedHidden(!selectedHidden())}/></label>
