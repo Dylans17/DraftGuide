@@ -28,6 +28,9 @@ export default ({ mode }: {mode: string}) => {
               type: "image/png"
             }
           ]
+        },
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,ico,png,svg}']
         }
       })
     ],
