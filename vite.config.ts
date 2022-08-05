@@ -5,6 +5,7 @@ import { VitePWA } from "vite-plugin-pwa";
 
 export default ({ mode }: {mode: string}) => {
   process.env = {...loadEnv(mode, process.cwd()), ...process.env};
+  let base = process.env.VITE_ROUTER_BASE || "/";
   return defineConfig({
     plugins: [
       solidPlugin(),
@@ -18,12 +19,12 @@ export default ({ mode }: {mode: string}) => {
           theme_color: "#ffffff",
           icons: [
             {
-              src: "/assets/android-chrome-192x192.png",
+              src: resolve(base, "/assets/android-chrome-192x192.png"),
               sizes: "192x192",
               type: "image/png"
             },
             {
-              src: "/assets/android-chrome-512x512.png",
+              src: resolve(base, "/assets/android-chrome-512x512.png"),
               sizes: "512x512",
               type: "image/png"
             }
@@ -50,7 +51,7 @@ export default ({ mode }: {mode: string}) => {
       }
     },
     //root: resolve(__dirname, "src") //Project root directory (defaults to cwd)
-    base: process.env.VITE_ROUTER_BASE || "/", //Base public path when served in development or production (Default: /)
+    base, //Base public path when served in development or production (Default: /)
     css: {
       modules: {
         localsConvention: "camelCase"
