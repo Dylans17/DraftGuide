@@ -17,9 +17,10 @@ enum Selected {
 export default function() {
   let pD = getRankings();
   let bW = getByeWeeks();
+  let home = <h1>Main Page</h1>;
   if (!pD || !bW) {
     return <>
-      <h1>Main Page</h1>
+      {home}
       <p>You have not set your sheet key yet. Go to settings and set your sheet key!</p>;
     </>
   }
@@ -126,7 +127,7 @@ export default function() {
   }
 
   return <>
-    <h1>Main Page</h1>
+    {home}
     <ul class={controlbar.controlbar}>
       <li>
         <span>
