@@ -4,11 +4,12 @@ import classes from "./css/table.module.css";
 
 
 export default function() {
+  let title = <h1>Team Page</h1>;
   let pD = getRankings();
   let bW = getByeWeeks();
   if (!pD || !bW) {
     return <>
-      <h1>Team Page</h1>
+      {title}
       <p>You have not set your sheet key yet. Go to settings and set your sheet key!</p>;
     </>
   }
@@ -28,7 +29,7 @@ export default function() {
 
 
   return <>
-    <h1>Team Page</h1>
+    {title}
     <table class={classes.table}>
       <thead style={ {top: "50px"} }>
         <tr>
