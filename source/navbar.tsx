@@ -1,9 +1,8 @@
 import { NavLink } from "@solidjs/router";
-import { resolve } from "path";
 import { createSignal } from "solid-js";
 import "./navbar.css";
 import { getFileName } from "./util";
-
+import icon from "./logo-192x192.png";
 
 // glob import all components in ./component-pages
 // since these are imported dynamically, we can choose to not import at all
@@ -36,7 +35,7 @@ export default function() {
       </ul>
       {/* Placeholder div so the links are fomatted correctly. */}
       <div />
-      <img class="logo" src={(process.env.VITE_ROUTER_BASE || "/") +"assets/android-chrome-192x192.png"} />
+      <img class="logo" src={icon} />
     </div>
   </nav>
 }
