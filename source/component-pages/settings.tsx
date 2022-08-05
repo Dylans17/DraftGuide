@@ -3,7 +3,7 @@ import { fetchSheetAll, getSheetKey, setSheetKey } from "../util";
 import { reset } from "./home";
 import styles from "./css/form.module.css";
 
-const sheetRegEx = /^(?:https:)?\/?\/?docs.google.com\/spreadsheets\/d\/([\w-]*)\/?(?:edit(?:#gid=\d*)?)?$/
+const sheetRegEx = /^(?:https:)?\/?\/?docs.google.com\/spreadsheets\/d\/([\w-]*)\/?(?:(?:edit|htmlview)(?:#gid=\d*)?)?$/
 
 export default function() {
   let [sheetKeyLocal, setSheetKeyLocal] = createSignal(getSheetKey());
