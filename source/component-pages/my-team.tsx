@@ -1,13 +1,13 @@
 import { For, JSXElement, Show } from "solid-js";
-import { getByeWeeks, getRankings, Player, Position } from "../util";
+import { getTeams, getPlayers, Player, Position } from "../util";
 import classes from "./css/table.module.css";
 
 
 export default function() {
   let title = <h1>Team Page</h1>;
-  let pD = getRankings();
-  let bW = getByeWeeks();
-  if (!pD || !bW) {
+  let pD = getPlayers();
+  let tD = getTeams();
+  if (!pD || !tD) {
     return <>
       {title}
       <p>You have not set your sheet key yet. Go to settings and set your sheet key!</p>;
@@ -15,7 +15,7 @@ export default function() {
   }
 
   let playerData = pD;
-  let byeWeeks = bW;
+  let teamData = tD;
   let userSelection: string[] = JSON.parse(localStorage.getItem("userSelection") || "[]");
   let numTeams = parseInt(localStorage.getItem("numTeams") || "0");
   let draftPos = parseInt(localStorage.getItem("draftPos") || "0");
@@ -56,8 +56,8 @@ export default function() {
               <td>{player.name}</td>
               <td>{Position[player.position]}</td>
               <td>{player.depth}</td>
-              <td>{player.team}</td>
-              <td>{byeWeeks.get(player.team)}</td>
+              <td title={teamData[player.team]?.name}>{player.team}</td>
+              <td>{teamData[player.team]?.bye}</td>
               <Show when={showPick}>
                 <td>{i % 2 === 0 ? draftPos + i * numTeams : numTeams + 1 - draftPos + numTeams * i}</td>
               </Show>
