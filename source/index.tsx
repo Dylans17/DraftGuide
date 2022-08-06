@@ -2,7 +2,7 @@ import { render } from "solid-js/web";
 import { hashIntegration, Router } from "@solidjs/router";
 import Navbar from "./navbar";
 import Routes from "./routes";
-import RouterMessages from "./message";
+import RouterMessages from "./serviceWorkerManager";
 
 function Index() {
   return <Router source={hashIntegration()}>

@@ -1,11 +1,25 @@
 import { createSignal, JSX, mergeProps, Show, splitProps } from "solid-js";
 import { registerSW } from "virtual:pwa-register";
+import { reset } from "./component-pages/home";
 import style from "./message.module.css";
+import { fetchSheetAll } from "./util";
+
+function breakingUpdate() {
+  if (localStorage.getItem("breaking-update") === "true") {
+    localStorage.setItem("breaking-update", "false");
+    reset();
+    let key = localStorage.getItem("key");
+    if (key !== null) {
+      fetchSheetAll(key);
+    }
+  }
+}
 
 export default function() {
   let [offlineReady, setOfflineReady] = createSignal(false);
   let [needRefresh, setNeedRefresh] = createSignal(false);
   let [breakingUpdate, setBreakingUpdate] = createSignal(false);
+  breakingUpdate();
   let version: string;
   let updateSW = registerSW({
     onNeedRefresh: async () => {
@@ -29,7 +43,7 @@ export default function() {
   let updateSWbreaking = ()=> {
     let cnfrm = confirm("Are you sure you want to update?\nAll local data will be removed!")
     if (cnfrm) {
-      localStorage.clear();
+      localStorage.setItem("breaking-update", "true");
       localStorage.setItem("breaking-version", version);
       updateSW();
     }
