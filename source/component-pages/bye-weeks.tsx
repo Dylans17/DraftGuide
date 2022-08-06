@@ -1,29 +1,31 @@
 import { For, Show } from "solid-js";
-import { getByeWeeks } from "../util";
+import { getTeams } from "../util";
 import classes from "./css/table.module.css";
 
 
 //literally don't even need reactivity (byeWeeks is not a signal)
 export default function() {
-  let byeWeeks = getByeWeeks();
+  let teams = getTeams();
   return <>
     <h1>Bye Weeks</h1>
     <Show
-    when={byeWeeks}
+    when={teams}
     fallback={<p>You have not set your sheet key yet. Go to settings and set your sheet key!</p>}
     >
       <table class={classes.table}>
         <thead style={ {top: "50px"} }>
           <tr>
             <th>Team</th>
+            <th>Abbreviation</th>
             <th>Bye Week</th>
           </tr>
         </thead>
         <tbody>
-          <For each={[...byeWeeks as Map<string, number>]}>{ ([team, byeWeek], index) => 
+          <For each={Object.entries(teams)}>{ ([abbr, {name, bye}], index) => 
             <tr>
-              <td>{team}</td>
-              <td>{byeWeek}</td>
+              <td>{name}</td>
+              <td>{abbr}</td>
+              <td>{bye}</td>
             </tr>
           }
           </For>
