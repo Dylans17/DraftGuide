@@ -1,5 +1,4 @@
 import { createSignal, JSX, mergeProps, Show, splitProps } from "solid-js";
-import { classList } from "solid-js/web";
 import { registerSW } from "virtual:pwa-register";
 import style from "./message.module.css";
 
@@ -21,6 +20,9 @@ export default function() {
       }
     },
     onOfflineReady: async () => {
+      let versionReq = await fetch("./breaking-version.txt");
+      let version = await versionReq.text();
+      localStorage.setItem("breaking-version", version);
       setOfflineReady(true);
     },
   });
