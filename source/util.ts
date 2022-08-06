@@ -1,8 +1,3 @@
-import { assert } from "console";
-import { type } from "os";
-import { Primitive, ValueOf } from "type-fest";
-
-
 export function getFileName(sourceFile: string, extension: string): string {
   let regex = new RegExp(`[a-z-]+(?=\\.${extension}$)`);
   let result = regex.exec(sourceFile);
@@ -54,6 +49,9 @@ export async function fetchSheet(sheetName: string, key: string): Promise<Sheet>
   //todo: add signature and no new data response
   //tqx += `;sig:${signature}`
   let response = await fetch(`https://docs.google.com/spreadsheets/d/${key}/gviz/tq?tqx=${tqx}&sheet=${sheetName}`);
+  if (!response.ok) {
+    throw new Error("Unable to reach sheet with key " + key);
+  }
   let text = await response.text();
   let search = /^[/O_o*\n]+a\((.*)\);$/.exec(text);
   let innerContent: string;
@@ -90,7 +88,7 @@ export async function setSheetKey(newSheetKey: string):Promise<boolean> {
   if (!navigator.onLine) {return false;}
   try {
     let response = await fetch(`https://docs.google.com/spreadsheets/d/${newSheetKey}/edit`);
-    if (!response.ok) {throw new Error()}
+    if (!response.ok) {throw new Error(`Unable to reach sheet with key ${newSheetKey} in setSheetKey`);}
   } catch {
     return false;
   }
@@ -109,55 +107,72 @@ export type Player = {
 
 export enum Position {WR, TE, RB, QB, K, DST}
 
-//local definition of columns for verification
-const byeWeeksCols:Column[] = [
-  {
-      id: "A",
-      label: "Team",
-      type: "string"
-  },
-  {
-      id: "B",
-      label: "Week",
-      type: "number"
-  }
-];
-
 /**
- * Fetch and ignore return result of all sheet data.
+ * Fetch and stores return results of all sheet data.
  * @see {@link getSheetKey} for getting the key
  * @param key The key of the google doc
  */
 export async function fetchSheetAll(key: string) {
-  await Promise.all([fetchByeWeeks(key), fetchRankings(key)]);
+  let [teams, players] = await Promise.all([fetchTeams(key), fetchPlayers(key)]);
+  localStorage.setItem("teams", JSON.stringify(teams));
+  localStorage.setItem("players", JSON.stringify(players));
   return;
+}
+
+
+export type Team = {
+  name: string,
+  bye: number
+}
+
+export type TeamData = {
+  [abbr: string]: Team
 }
 
 /**
  * gets the bye weeks if stored
  * @returns bye week for each team in a Map or false if not stored
  */
-export function getByeWeeks(): Map<string, number> | false {
-  let ls = localStorage.getItem("byeWeeks");
+export function getTeams(): TeamData | false {
+  let ls = localStorage.getItem("teams");
   if (ls !== null) {
-    return new Map(JSON.parse(ls));
+    return JSON.parse(ls);
   }
   return false;
 }
 
+//local definition of columns for verification
+const teamsCols:Column[] = [
+  {
+    id: "A",
+    label: "Name",
+    type: "string"
+  },
+  {
+    id: "B",
+    label: "Abbreviation",
+    type: "string"
+  },
+  {
+    id: "C",
+    label: "Week",
+    type: "number"
+  }
+];
+
 /**
  * fetches and stores the bye weeks from google doc
- * uses "bye-week" as sheet name
+ * uses "teams" as sheet name
  * @see {@link getSheetKey} for getting the key
  * @param key The key of the google doc
  * @returns bye week for each team in a Map
  */
-export async function fetchByeWeeks(key: string): Promise<Map<string, number>> {
-  let sheetResult = await fetchSheet("bye-week", key);
+export async function fetchTeams(key: string): Promise<TeamData> {
+  let sheetResult = await fetchSheet("teams", key);
   // verify that the columns are correct
   let cols = sheetResult.table.cols;
   for (let i=0; i<2; i++) {
-    let colLocal = byeWeeksCols[i];
+    let colLocal = teamsCols[i];
     let colRemote = cols[i];
     let keys: (keyof Column)[] = Object.keys(colLocal) as (keyof Column)[];
     if (keys.some((key)=>colLocal[key] !== colRemote[key])) {
@@ -165,24 +180,25 @@ export async function fetchByeWeeks(key: string): Promise<Map<string, number>> {
     }
   }
   let rows = sheetResult.table.rows;
-  let rowMapArr = rows.map((row):[string, number] => {
-    let team = row.c[0]?.v;
-    let byeWeek = row.c[1]?.v;
-    if (!team) {
-      team = "UNKNOWN ENTRY"
+  let rowMapArr = rows.map((row):[string, Team] => {
+    let name = row.c[0]?.v;
+    let abbr = row.c[1]?.v;
+    let bye = row.c[2]?.v;
+    if (!name || !abbr) {
+      name = "UNKNOWN ENTRY";
+      abbr = "UNK";
     }
-    if (!byeWeek) {
-      byeWeek = -1;
+    if (!bye) {
+      bye = -1;
     }
-    if (typeof team === "number" || typeof byeWeek === "string") {
+    if (typeof name === "number" || typeof abbr === "number" || typeof bye === "string") {
       // would be very unexpected since verifying the columns should do the job
       throw new Error("Highly unexpected type error from bye-week columns!\nMake a new issue with your sheet id on GitHub!");
     }
-    return [team, byeWeek];
+    return [abbr, {name, bye}];
   });
 
-  localStorage.setItem("byeWeeks", JSON.stringify(rowMapArr));
-  return new Map(rowMapArr);
+  return Object.fromEntries(rowMapArr);
 }
 
 //local definition of columns for verification
@@ -219,8 +235,8 @@ const rankingsCols:Column[] = [
  * @returns Array of every player or false if not stored
  * @see {@link Player} for information about players
  */
-export function getRankings(): Player[] | false {
-  let ls = localStorage.getItem("rankings");
+export function getPlayers(): Player[] | false {
+  let ls = localStorage.getItem("players");
   if (ls !== null) {
     return JSON.parse(ls);
   }
@@ -228,16 +244,16 @@ export function getRankings(): Player[] | false {
 }
 
 /**
- * fetches and stores the player rankings from google doc
+ * fetches the player rankings from google doc
  * uses "rankings" as sheet name
  * @see {@link getSheetKey} for getting the key
  * @param key The key of the google doc
  * @returns Array of every player
  * @see {@link Player} for information about players
  */
-export async function fetchRankings(key: string): Promise<Player[]> {
+export async function fetchPlayers(key: string): Promise<Player[]> {
     
-  let sheetResult = await fetchSheet("rankings", key);
+  let sheetResult = await fetchSheet("players", key);
   // verify that the columns are correct
   let cols = sheetResult.table.cols;
   for (let i=0; i<2; i++) {
@@ -274,6 +290,5 @@ export async function fetchRankings(key: string): Promise<Player[]> {
     };
   });
 
-  localStorage.setItem("rankings", JSON.stringify(playerArr));
   return playerArr;
 }
