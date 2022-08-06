@@ -24,8 +24,8 @@ export default function() {
   if (showPick) {
     draftPos = (draftPos - 1) % numTeams + 1;
   }
-  //this filter is technically O(nm) and a better method would be O(n+m) but this is easy & fast enough since userSelection is often O(1)
-  let userTeam = playerData.filter(p => userSelection.includes(p.ranking));
+  
+  let userTeam = userSelection.map(ranking => playerData[ranking-1]);
 
 
   return <>
