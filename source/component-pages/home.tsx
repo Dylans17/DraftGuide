@@ -2,6 +2,7 @@ import { createSignal, For, onCleanup, Signal } from "solid-js";
 import { getByeWeeks, getRankings, Player, Position } from "../util";
 import classes from "./css/table.module.css";
 import controlbar from "./css/controlbar.module.css";
+import lifecycle from "@socheatsok78/page-lifecycle";
 
 export function reset() {
     localStorage.removeItem("userSelection");
@@ -119,9 +120,8 @@ export default function() {
   }
 
   onCleanup(saveSelected)
-  addEventListener("beforeunload", saveSelected)
+  lifecycle.addEventListener("statechange", (stateEvent) => {if (stateEvent.oldState === "active" && stateEvent.newState === "passive") {saveSelected()}});
   function saveSelected() {
-    removeEventListener("beforeunload", saveSelected);
     localStorage.setItem("userSelection", JSON.stringify(userSelection));
     localStorage.setItem("otherSelection", JSON.stringify(otherSelection));
   }
