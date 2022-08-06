@@ -1,7 +1,8 @@
 import { createSignal, For, onCleanup, Signal } from "solid-js";
-import { getByeWeeks, getRankings, Player, Position } from "../util";
+import { getTeams, getPlayers, Player, Position } from "../util";
 import classes from "./css/table.module.css";
 import controlbar from "./css/controlbar.module.css";
+import lifecycle from "@socheatsok78/page-lifecycle";
 
 export function reset() {
     localStorage.removeItem("userSelection");
@@ -15,18 +16,18 @@ enum Selected {
 }
 
 export default function() {
-  let pD = getRankings();
-  let bW = getByeWeeks();
+  let pD = getPlayers();
+  let bW = getTeams();
   let home = <h1>Main Page</h1>;
   if (!pD || !bW) {
     return <>
       {home}
-      <p>You have not set your sheet key yet. Go to settings and set your sheet key!</p>;
+      <p>You have not set your sheet key yet. Go to settings and set your sheet key!</p>
     </>
   }
 
   let playerData = pD;
-  let byeWeeks = bW;
+  let teamData = bW;
   let userSelection: string[] = JSON.parse(localStorage.getItem("userSelection") || "[]");
   let otherSelection: string[] = JSON.parse(localStorage.getItem("otherSelection") || "[]");
   let playerSelectionSignals: {[name:string]: Signal<Selected>} = {};
@@ -119,9 +120,8 @@ export default function() {
   }
 
   onCleanup(saveSelected)
-  addEventListener("beforeunload", saveSelected)
+  lifecycle.addEventListener("statechange", (stateEvent) => {if (stateEvent.oldState === "active" && stateEvent.newState === "passive") {saveSelected()}});
   function saveSelected() {
-    removeEventListener("beforeunload", saveSelected);
     localStorage.setItem("userSelection", JSON.stringify(userSelection));
     localStorage.setItem("otherSelection", JSON.stringify(otherSelection));
   }
@@ -169,8 +169,8 @@ export default function() {
             <td>{player.name}</td>
             <td>{Position[player.position]}</td>
             <td>{player.depth}</td>
-            <td>{player.team}</td>
-            <td>{byeWeeks.get(player.team)}</td>
+            <td title={teamData[player.team]?.name}>{player.team}</td>
+            <td>{teamData[player.team]?.bye}</td>
             <td>{player.adp}</td>
           </tr>
         }</For>
