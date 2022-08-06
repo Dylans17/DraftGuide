@@ -16,7 +16,7 @@ export default function() {
 
   let playerData = pD;
   let teamData = tD;
-  let userSelection: string[] = JSON.parse(localStorage.getItem("userSelection") || "[]");
+  let userSelection: number[] = JSON.parse(localStorage.getItem("userSelection") || "[]");
   let numTeams = parseInt(localStorage.getItem("numTeams") || "0");
   let draftPos = parseInt(localStorage.getItem("draftPos") || "0");
   let numRounds = parseInt(localStorage.getItem("numTeams") || "0");
@@ -25,7 +25,7 @@ export default function() {
     draftPos = (draftPos - 1) % numTeams + 1;
   }
   //this filter is technically O(nm) and a better method would be O(n+m) but this is easy & fast enough since userSelection is often O(1)
-  let userTeam = playerData.filter(p => userSelection.includes(p.name));
+  let userTeam = playerData.filter(p => userSelection.includes(p.ranking));
 
 
   return <>

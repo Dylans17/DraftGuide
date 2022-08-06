@@ -28,20 +28,20 @@ export default function() {
 
   let playerData = pD;
   let teamData = bW;
-  let userSelection: string[] = JSON.parse(localStorage.getItem("userSelection") || "[]");
-  let otherSelection: string[] = JSON.parse(localStorage.getItem("otherSelection") || "[]");
-  let playerSelectionSignals: {[name:string]: Signal<Selected>} = {};
+  let userSelection: number[] = JSON.parse(localStorage.getItem("userSelection") || "[]");
+  let otherSelection: number[] = JSON.parse(localStorage.getItem("otherSelection") || "[]");
+  let playerSelectionSignals: {[rank:number]: Signal<Selected>} = {};
 
   //This *could* be in one loop but would be a lot less efficient O(n^2) vs O(n)
-  for (let name of userSelection) {
-    playerSelectionSignals[name] = createSignal(Selected.user);
+  for (let ranking of userSelection) {
+    playerSelectionSignals[ranking] = createSignal(Selected.user);
   }
-  for (let name of otherSelection) {
-    playerSelectionSignals[name] = createSignal(Selected.other);
+  for (let ranking of otherSelection) {
+    playerSelectionSignals[ranking] = createSignal(Selected.other);
   }
   for (let player of playerData) {
-    if (player.name in playerSelectionSignals) {continue;}
-    playerSelectionSignals[player.name] = createSignal(Selected.unselected);
+    if (player.ranking in playerSelectionSignals) {continue;}
+    playerSelectionSignals[player.ranking] = createSignal(Selected.unselected);
   }
 
   let [userSelecting, setUserSelecting] = createSignal(false);
@@ -51,11 +51,11 @@ export default function() {
 
   function userSelectionRemove(player: Player):boolean {
     // you should only be able to remove the last user selected player without a warning
-    if (userSelection[userSelection.length - 1] === player.name) {
+    if (userSelection[userSelection.length - 1] === player.ranking) {
       userSelection.pop();
       return true;
     }
-    let index = userSelection.findIndex((name) => name === player.name);
+    let index = userSelection.findIndex((ranking) => ranking === player.ranking);
     let cnfrm = confirm.bind(null, `Are you sure that you want to remove ${player.name} [pick ${index + 1} of ${userSelection.length}] from your selection?`);
     if (index !== -1 && cnfrm()) {
       userSelection.splice(index, 1);
@@ -65,11 +65,11 @@ export default function() {
   }
 
   function toggleSelection(player: Player) {
-    let [selected, setSelected] = playerSelectionSignals[player.name];
+    let [selected, setSelected] = playerSelectionSignals[player.ranking];
     // remove player from old list if already on one
     if (selected() !== Selected.unselected) {
       if (selected() === Selected.other) {
-        otherSelection = otherSelection.filter((name)=>name !== player.name);
+        otherSelection = otherSelection.filter((ranking)=>ranking !== player.ranking);
       }
       else {
         let removed = userSelectionRemove(player);
@@ -84,16 +84,16 @@ export default function() {
     // otherwise, set to current selection mode
     if (userSelecting()) {
       setSelected(Selected.user);
-      userSelection.push(player.name);
+      userSelection.push(player.ranking);
     }
     else {
       setSelected(Selected.other);
-      otherSelection.push(player.name);
+      otherSelection.push(player.ranking);
     }
   }
 
   function selectedStyle(arg: Selected | Player) {
-    let selected = arg.hasOwnProperty("name")? playerSelectionSignals[(arg as Player).name][0]() : arg as Selected;
+    let selected = arg.hasOwnProperty("name")? playerSelectionSignals[(arg as Player).ranking][0]() : arg as Selected;
     switch (selected) {
       case Selected.user:
         return classes.selectedUser
@@ -109,7 +109,7 @@ export default function() {
     //filter of any non alpha characters of people's names and split by spaces
     //no spaces in search box.
     let posFilterVal = positionSelected() === "ANY" || positionSelected().includes(Position[player.position]);
-    let playerSelection = playerSelectionSignals[player.name][0]()
+    let playerSelection = playerSelectionSignals[player.ranking][0]()
     let selectedFilterVal = !selectedHidden() || playerSelection === Selected.unselected;
     let nameFilterVal = searchValue() === "" || player.name.toUpperCase().replace(/[^A-Z ]/g, "").split(" ").some((name)=>name.startsWith(searchValue().toUpperCase()));
     return posFilterVal && selectedFilterVal && nameFilterVal;
