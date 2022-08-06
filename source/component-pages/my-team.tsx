@@ -10,7 +10,7 @@ export default function() {
   if (!pD || !tD) {
     return <>
       {title}
-      <p>You have not set your sheet key yet. Go to settings and set your sheet key!</p>;
+      <p>You have not set your sheet key yet. Go to settings and set your sheet key!</p>
     </>
   }
 
