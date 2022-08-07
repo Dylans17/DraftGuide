@@ -62,8 +62,6 @@ export default function() {
       }
     }
   }
-  console.log(byeWeekLimit)
-  console.log(byeWeekLimitActive)
 
   let [userSelecting, setUserSelecting] = createSignal(false);
   let [selectedHidden, setSelectedHidden] = createSignal(false);
