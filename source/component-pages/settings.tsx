@@ -61,6 +61,9 @@ export default function() {
       <li>
         <label for="nRs">Number of rounds: </label><LocalStorageInput id="nRs" type="number" LSkey="numRounds"/>
       </li>
+      <li>
+        <label for="bWl">Bye Week Limit: </label><LocalStorageInput id="bWl" type="number" LSkey="byeWeekLimit"/>
+      </li>
     </ul>
     <h2>Data Management</h2>
     <ul class={styles.formul}>
