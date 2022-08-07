@@ -1,4 +1,4 @@
-import { createSignal, For, onCleanup, Signal } from "solid-js";
+import { createSignal, For, JSX, onCleanup, Signal } from "solid-js";
 import { getTeams, getPlayers, Player, Position } from "../util";
 import classes from "./css/table.module.css";
 import controlbar from "./css/controlbar.module.css";
@@ -66,6 +66,7 @@ export default function() {
   let [userSelecting, setUserSelecting] = createSignal(false);
   let [selectedHidden, setSelectedHidden] = createSignal(false);
   let [positionSelected, setPositionSelected] = createSignal("ANY");
+  let [teamSelected, setTeamSelected] = createSignal("ANY");
   let [searchValue, setSearchValue] = createSignal("");
 
   function userSelectionRemove(player: Player):boolean {
@@ -139,17 +140,13 @@ export default function() {
     //filter of any non alpha characters of people's names and split by spaces
     //no spaces in search box.
     let posFilterVal = positionSelected() === "ANY" || positionSelected().includes(Position[player.position]);
-    let playerSelection = playerSelectionSignals[player.ranking][0]()
+    let teamFilterVal = teamSelected() === "ANY" || teamSelected() === player.team;
+    let playerSelection = playerSelectionSignals[player.ranking][0]();
     let selectedFilterVal = !selectedHidden() || playerSelection === Selected.unselected;
     let nameFilterVal = searchValue() === "" || player.name.toUpperCase().replace(/[^A-Z ]/g, "").split(" ").some((name)=>name.startsWith(searchValue().toUpperCase()));
-    return posFilterVal && selectedFilterVal && nameFilterVal;
+    return posFilterVal && teamFilterVal && selectedFilterVal && nameFilterVal;
   }
 
-  function filterAllInvalid(e: InputEvent) {
-    if (/^[^a-zA-Z]*$/.test(e.data || "")) {e.preventDefault();}
-  }
-
-  
   let ifPassiveThenSave = (stateEvent:StateChangeEvent) => {if (stateEvent.oldState === "active" && stateEvent.newState === "passive") {saveSelected()}};
   lifecycle.addEventListener("statechange", ifPassiveThenSave);
   onCleanup(() => {
@@ -161,34 +158,15 @@ export default function() {
     localStorage.setItem("otherSelection", JSON.stringify(otherSelection));
   }
 
+  let controlBarElm = <ControlBar />
+  let [controlBarHeight, setControlBarHeight] = createSignal(0);
+  new ResizeObserver((entries)=>setControlBarHeight(entries[0].borderBoxSize[0].blockSize)).observe(controlBarElm as Element);
+
   return <>
     {home}
-    <ul class={controlbar.controlbar}>
-      <li>
-        <span>
-          <select onchange={(e)=>setPositionSelected((e.target as HTMLSelectElement).value)}>
-            {
-              ["ANY", "RB/WR", ...positionsArray()].map(position => 
-                <option value={position}>{position}</option>
-              )
-            }
-          </select>
-          <label for="search"> Search: </label>
-          <input id="search" type="text" 
-            value={searchValue()}
-            onbeforeinput={(e) => /^[^a-zA-Z]+$/.test(e.data || "") && e.preventDefault()}
-            oninput={(e)=>setSearchValue((e.target as HTMLInputElement).value.replace(/[^a-zA-Z]/g,""))}
-          />
-          <button onclick={()=>setSearchValue("")}>Clear</button>
-        </span>
-        <span style={{float: "right"}}>
-          <label>Hide<span class={controlbar.hideSmall}> Selected</span>: <input type="checkbox" checked={selectedHidden()} onchange={()=>setSelectedHidden(!selectedHidden())}/></label>
-          <label>Select<span class={controlbar.hideSmall}> for Self</span>: <input type="checkbox" checked={userSelecting()} onchange={()=>setUserSelecting(!userSelecting())} /></label>
-        </span>
-      </li>
-    </ul>
+    {controlBarElm}
     <table class={classes.table}>
-      <thead class={controlbar.thead}>
+      <thead style={{top: `${50+controlBarHeight()}px`}}>
         <tr>
           <th>Player Name</th>
           <th>Position</th>
@@ -212,6 +190,48 @@ export default function() {
       </tbody>
     </table>
   </>
+
+function ControlBar() {
+  return <ul class={controlbar.controlbar}>
+    <li>
+      <span>
+        <label>Position: 
+          <select onchange={(e)=>setPositionSelected((e.target as HTMLSelectElement).value)}>
+            {
+              ["ANY", "RB/WR", ...positionsArray()].map(position => 
+                <option value={position}>{position}</option>
+              )
+            }
+          </select>
+        </label>
+        <label> Team: 
+          <select onchange={(e)=>setTeamSelected((e.target as HTMLSelectElement).value)}>
+            <option value="ANY">ANY</option>
+            {
+              Object.entries(teamData).map(([abbr, team]) => 
+                <option value={abbr}>{team.name}</option>
+              )
+            }
+          </select>
+        </label>
+        <span style={{"white-space": "nowrap"}}>
+          <label> Search: 
+          <input type="text" 
+            value={searchValue()}
+            onbeforeinput={(e) => /^[^a-zA-Z]+$/.test(e.data || "") && e.preventDefault()}
+            oninput={(e)=>setSearchValue((e.target as HTMLInputElement).value.replace(/[^a-zA-Z]/g,""))}
+          />
+          </label>
+          <button onclick={()=>setSearchValue("")}>Clear</button>
+        </span>
+      </span>
+      <span style={{float: "right"}}>
+        <label>Hide<span class={controlbar.hideSmall}> Selected</span>: <input type="checkbox" checked={selectedHidden()} onchange={()=>setSelectedHidden(!selectedHidden())}/></label>
+        <label>Select<span class={controlbar.hideSmall}> for Self</span>: <input type="checkbox" checked={userSelecting()} onchange={()=>setUserSelecting(!userSelecting())} /></label>
+      </span>
+    </li>
+  </ul>
+  }
 };
 
 
