@@ -176,7 +176,7 @@ export async function fetchTeams(key: string): Promise<TeamData> {
     let colRemote = cols[i];
     let keys: (keyof Column)[] = Object.keys(colLocal) as (keyof Column)[];
     if (keys.some((key)=>colLocal[key] !== colRemote[key])) {
-      throw new Error("Columns fetched from bye-week sheet do not match expected format!");
+      throw new Error("Columns fetched from teams sheet do not match expected format!");
     }
   }
   let rows = sheetResult.table.rows;
@@ -261,7 +261,7 @@ export async function fetchPlayers(key: string): Promise<Player[]> {
     let colRemote = cols[i];
     let keys: (keyof Column)[] = Object.keys(colLocal) as (keyof Column)[];
     if (keys.some((key)=>colLocal[key] !== colRemote[key])) {
-      throw new Error("Columns fetched from rankings sheet do not match expected format!");
+      throw new Error("Columns fetched from players sheet do not match expected format!");
     }
   }
   let rows = sheetResult.table.rows;
