@@ -44,6 +44,25 @@ export default function() {
     playerSelectionSignals[player.ranking] = createSignal(Selected.unselected);
   }
 
+  let byeWeekLimitLS: string | null = localStorage.getItem("byeWeekLimit");
+  let byeWeekLimitActive: boolean = false;
+  let byeWeekLimit = -1;
+  let byeWeekSelectionCount: number[] = [];
+  if (byeWeekLimitLS !== null) {
+    byeWeekLimit = parseInt(byeWeekLimitLS);
+    byeWeekLimitActive = true;
+    for (let ranking of userSelection) {
+      let player = playerData[ranking-1];
+      let byeWeek = teamData[player.team].bye;
+      if (byeWeekSelectionCount[byeWeek] === undefined) {
+        byeWeekSelectionCount[byeWeek] = 1;
+      }
+      else {
+        byeWeekSelectionCount[byeWeek]++;
+      }
+    }
+  }
+
   let [userSelecting, setUserSelecting] = createSignal(false);
   let [selectedHidden, setSelectedHidden] = createSignal(false);
   let [positionSelected, setPositionSelected] = createSignal("ANY");
@@ -53,12 +72,16 @@ export default function() {
     // you should only be able to remove the last user selected player without a warning
     if (userSelection[userSelection.length - 1] === player.ranking) {
       userSelection.pop();
+      //NaN when byeWeekLimitActive === false
+      byeWeekSelectionCount[teamData[player.team].bye]--;
       return true;
     }
     let index = userSelection.findIndex((ranking) => ranking === player.ranking);
     let cnfrm = confirm.bind(null, `Are you sure that you want to remove ${player.name} [pick ${index + 1} of ${userSelection.length}] from your selection?`);
     if (index !== -1 && cnfrm()) {
       userSelection.splice(index, 1);
+      //NaN when byeWeekLimitActive === false
+      byeWeekSelectionCount[teamData[player.team].bye]--;
       return true;
     }
     return false;
@@ -84,6 +107,13 @@ export default function() {
     // otherwise, set to current selection mode
     if (userSelecting()) {
       setSelected(Selected.user);
+      let bye = teamData[player.team].bye;
+      if (byeWeekLimitActive && ++byeWeekSelectionCount[bye] >= byeWeekLimit) {
+        //https://codegolf.stackexchange.com/questions/4707/outputting-ordinal-numbers-1st-2nd-3rd
+        //adapted to ts (not golfing) by me
+        let ord = (n:number) => n.toString() + ([,'st','nd','rd'][n%100>>3^1&&n%10]||'th');
+        alert(`${player.name} is the ${ord(byeWeekSelectionCount[bye])} player with a bye on week ${bye}!`);
+      }
       userSelection.push(player.ranking);
     }
     else {
