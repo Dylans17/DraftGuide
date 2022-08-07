@@ -53,7 +53,6 @@ export default function() {
   let byeWeekSelectionCount: Counter = new Proxy(c, {
     get: (obj, index: string) => obj[parseInt(index)] || 0
   });
-  console.log(byeWeekSelectionCount);
   if (byeWeekLimitLS !== null) {
     byeWeekLimit = parseInt(byeWeekLimitLS);
     byeWeekLimitActive = true;
