@@ -3,10 +3,11 @@ import { getTeams, getPlayers, Player, Position } from "../util";
 import classes from "./css/table.module.css";
 import controlbar from "./css/controlbar.module.css";
 import lifecycle from "@socheatsok78/page-lifecycle";
+import StateChangeEvent from "@socheatsok78/page-lifecycle/types/StateChangeEvent";
 
 export function reset() {
-    localStorage.removeItem("userSelection");
-    localStorage.removeItem("otherSelection");
+  localStorage.removeItem("userSelection");
+  localStorage.removeItem("otherSelection");
 }
 
 enum Selected {
@@ -149,8 +150,13 @@ export default function() {
     if (/^[^a-zA-Z]*$/.test(e.data || "")) {e.preventDefault();}
   }
 
-  onCleanup(saveSelected)
-  lifecycle.addEventListener("statechange", (stateEvent) => {if (stateEvent.oldState === "active" && stateEvent.newState === "passive") {saveSelected()}});
+  
+  let ifPassiveThenSave = (stateEvent:StateChangeEvent) => {if (stateEvent.oldState === "active" && stateEvent.newState === "passive") {saveSelected()}};
+  lifecycle.addEventListener("statechange", ifPassiveThenSave);
+  onCleanup(() => {
+    saveSelected();
+    lifecycle.removeEventListener("statechange", ifPassiveThenSave);
+  });
   function saveSelected() {
     localStorage.setItem("userSelection", JSON.stringify(userSelection));
     localStorage.setItem("otherSelection", JSON.stringify(otherSelection));
