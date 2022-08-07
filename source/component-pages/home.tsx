@@ -48,19 +48,18 @@ export default function() {
   let byeWeekLimitLS: string | null = localStorage.getItem("byeWeekLimit");
   let byeWeekLimitActive: boolean = false;
   let byeWeekLimit = -1;
-  let byeWeekSelectionCount: number[] = [];
+  type Counter = {[key: number]:number}
+  let c: Counter = {};
+  let byeWeekSelectionCount: Counter = new Proxy(c, {
+    get: (obj, index: string) => obj[parseInt(index)] || 0
+  });
   if (byeWeekLimitLS !== null) {
     byeWeekLimit = parseInt(byeWeekLimitLS);
     byeWeekLimitActive = true;
     for (let ranking of userSelection) {
       let player = playerData[ranking-1];
       let byeWeek = teamData[player.team]?.bye;
-      if (byeWeekSelectionCount[byeWeek] === undefined) {
-        byeWeekSelectionCount[byeWeek] = 1;
-      }
-      else {
-        byeWeekSelectionCount[byeWeek]++;
-      }
+      byeWeekSelectionCount[byeWeek]++;
     }
   }
 
