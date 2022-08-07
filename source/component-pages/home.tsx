@@ -53,7 +53,7 @@ export default function() {
     byeWeekLimitActive = true;
     for (let ranking of userSelection) {
       let player = playerData[ranking-1];
-      let byeWeek = teamData[player.team].bye;
+      let byeWeek = teamData[player.team]?.bye;
       if (byeWeekSelectionCount[byeWeek] === undefined) {
         byeWeekSelectionCount[byeWeek] = 1;
       }
@@ -73,7 +73,7 @@ export default function() {
     if (userSelection[userSelection.length - 1] === player.ranking) {
       userSelection.pop();
       //NaN when byeWeekLimitActive === false
-      byeWeekSelectionCount[teamData[player.team].bye]--;
+      byeWeekSelectionCount[teamData[player.team]?.bye]--;
       return true;
     }
     let index = userSelection.findIndex((ranking) => ranking === player.ranking);
@@ -81,7 +81,7 @@ export default function() {
     if (index !== -1 && cnfrm()) {
       userSelection.splice(index, 1);
       //NaN when byeWeekLimitActive === false
-      byeWeekSelectionCount[teamData[player.team].bye]--;
+      byeWeekSelectionCount[teamData[player.team]?.bye]--;
       return true;
     }
     return false;
@@ -107,7 +107,7 @@ export default function() {
     // otherwise, set to current selection mode
     if (userSelecting()) {
       setSelected(Selected.user);
-      let bye = teamData[player.team].bye;
+      let bye = teamData[player.team]?.bye;
       if (byeWeekLimitActive && ++byeWeekSelectionCount[bye] >= byeWeekLimit) {
         //https://codegolf.stackexchange.com/questions/4707/outputting-ordinal-numbers-1st-2nd-3rd
         //adapted to ts (not golfing) by me
