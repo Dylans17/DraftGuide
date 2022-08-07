@@ -19,7 +19,7 @@ export default function() {
   let userSelection: number[] = JSON.parse(localStorage.getItem("userSelection") || "[]");
   let numTeams = parseInt(localStorage.getItem("numTeams") || "0");
   let draftPos = parseInt(localStorage.getItem("draftPos") || "0");
-  let numRounds = parseInt(localStorage.getItem("numTeams") || "0");
+  let numRounds = parseInt(localStorage.getItem("numRounds") || "0");
   let showPick = numTeams > 0 && draftPos > 0 && numRounds > 0;
   if (showPick) {
     draftPos = (draftPos - 1) % numTeams + 1;
