@@ -198,7 +198,7 @@ function ControlBar() {
         <label>Position: 
           <select onchange={(e)=>setPositionSelected((e.target as HTMLSelectElement).value)}>
             {
-              ["ANY", "RB/WR", ...positionsArray()].map(position => 
+              ["ANY", "RB/WR", "RB/WR/TE", ...positionsArray()].map(position => 
                 <option value={position}>{position}</option>
               )
             }
@@ -208,9 +208,11 @@ function ControlBar() {
           <select onchange={(e)=>setTeamSelected((e.target as HTMLSelectElement).value)}>
             <option value="ANY">ANY</option>
             {
-              Object.entries(teamData).map(([abbr, team]) => 
-                <option value={abbr}>{team.name}</option>
-              )
+              Object.entries(teamData)
+                .sort(([abbr1, team1], [abbr2, team2])=>team1.name.localeCompare(team2.name))
+                .map(([abbr, team]) => 
+                  <option value={abbr}>{team.name}</option>
+                )
             }
           </select>
         </label>
